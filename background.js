@@ -1,23 +1,24 @@
+var STORAGE_INPUT_ID = 'storage';
 chrome.runtime.onMessage.addListener(function(message) {
-    if (message && message.type == 'copy') {
-		if(!document.getElementById('storage'))
+	if (message && message.type == 'copy') {
+		var input;
+		if(!document.getElementById(STORAGE_INPUT_ID))
 		{
-			var input = document.createElement('textarea');
-			input.setAttribute("id", "storage")
-			document.body.appendChild(input);
-			input.value = message.text;
+			input = document.createElement('textarea');
+			input.setAttribute("id", STORAGE_INPUT_ID)
 		} else {
-			var input = document.getElementById('storage');
-			input.value = message.text;
-			document.body.appendChild(input);
+			input = document.getElementById(STORAGE_INPUT_ID);
 		}
+
+		document.body.appendChild(input);
+		input.value = message.text;
     }
 });
 
 function getLink(typeLinkToGet) {
-	if(document.getElementById('storage'))
+	if(document.getElementById(STORAGE_INPUT_ID))
 	{
-		var input = document.getElementById('storage');
+		var input = document.getElementById(STORAGE_INPUT_ID);
 		var savedObject = JSON.parse(input.value);
 		var text = "";
 		if(typeLinkToGet === "flowdock"){
