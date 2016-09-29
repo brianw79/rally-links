@@ -1,4 +1,5 @@
 var STORAGE_INPUT_ID = 'storage';
+
 chrome.runtime.onMessage.addListener(function(message) {
 	if (message && message.type == 'copy') {
 		var input;
