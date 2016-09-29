@@ -2,13 +2,12 @@ var STORAGE_INPUT_ID = 'storage';
 
 chrome.runtime.onMessage.addListener(function(message) {
 	if (message && message.type == 'copy') {
-		var input;
-		if(!document.getElementById(STORAGE_INPUT_ID))
+		var input = document.getElementById(STORAGE_INPUT_ID);
+
+		if(!input)
 		{
 			input = document.createElement('textarea');
 			input.setAttribute("id", STORAGE_INPUT_ID)
-		} else {
-			input = document.getElementById(STORAGE_INPUT_ID);
 		}
 
 		document.body.appendChild(input);
