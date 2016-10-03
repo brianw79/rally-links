@@ -20,7 +20,6 @@ function parentNodeOfType(childNode, parentElementType) {
 	
     while(testObj.nodeName.toUpperCase() != parentElementType.toUpperCase()) {
         testObj = testObj.parentElement;
-        tries++;
     }
 
 	return testObj;
