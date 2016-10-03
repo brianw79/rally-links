@@ -17,9 +17,8 @@ document.addEventListener('contextmenu', function (e) {
 
 function parentNodeOfType(childNode, parentElementType) {
     var testObj = childNode.parentElement;
-    var tries = 1;
 	
-    while(testObj.nodeName.toUpperCase() != parentElementType.toUpperCase() && tries <= 30) {
+    while(testObj.nodeName.toUpperCase() != parentElementType.toUpperCase()) {
         testObj = testObj.parentElement;
         tries++;
     }
