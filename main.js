@@ -35,7 +35,7 @@ function getLink(typeLinkToGet) {
 		var savedObject = JSON.parse(input.value);
 		var text = "";
 		if(typeLinkToGet === LINK_TYPE.FLOWDOCK){
-			text = "[" + savedObject.linkText + "](" + savedObject.url + " \"" + savedObject.description + "\")";
+			text = "[" + savedObject.linkText + "](" + savedObject.url + " \"" + savedObject.description.replace(/"/g, '\\"') + "\")";
 		} else if (typeLinkToGet === LINK_TYPE.HTML){
 			text = "<a href='" + savedObject.url + "'>" + savedObject.linkText + "</a>";
 		} else if (typeLinkToGet === LINK_TYPE.SOURCE_CONTROL){
