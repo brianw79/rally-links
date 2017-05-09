@@ -2,12 +2,14 @@ var STORAGE_INPUT_ID = 'storage';
 var LINK_TYPE  = {
     FLOWDOCK  : 'flowdock',
     SOURCE_CONTROL     : 'sourceControl',
-    HTML : 'html'
+    HTML : 'html',
+	TEXT : 'text'
 };
 
 chrome.contextMenus.create({"title": "Create Flowdock Link", "contexts": ["link"], "onclick": genericOnClick, "id": LINK_TYPE.FLOWDOCK});
 chrome.contextMenus.create({"title": "Create Source Control Prefix", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.SOURCE_CONTROL});
 chrome.contextMenus.create({"title": "Create HTML Link", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.HTML});
+chrome.contextMenus.create({"title": "Create Text Reference", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.TEXT});
 
 chrome.runtime.onMessage.addListener(function(message) {
 	if (message && message.type == 'copy') {
@@ -39,7 +41,9 @@ function getLink(typeLinkToGet) {
 		} else if (typeLinkToGet === LINK_TYPE.HTML){
 			text = "<a href='" + savedObject.url + "'>" + savedObject.linkText + "</a>";
 		} else if (typeLinkToGet === LINK_TYPE.SOURCE_CONTROL){
-			text = "[ " + savedObject.linkText + " : " + savedObject.description + " ]"
+			text = "[ " + savedObject.linkText + " : " + savedObject.description + " ]";
+		} else if (typeLinkToGet === LINK_TYPE.TEXT){
+			text = savedObject.linkText + ": " + savedObject.description + "(" + savedObject.url + ")";
 		}
 		
 		input.value = text;
