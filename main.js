@@ -43,7 +43,7 @@ function getLink(typeLinkToGet) {
 		} else if (typeLinkToGet === LINK_TYPE.SOURCE_CONTROL){
 			text = "[ " + savedObject.linkText + " : " + savedObject.description + " ]";
 		} else if (typeLinkToGet === LINK_TYPE.TEXT){
-			text = savedObject.linkText + ": " + savedObject.description + "(" + savedObject.url + ")";
+			text = savedObject.linkText + ": " + savedObject.description + " (" + savedObject.url + ")";
 		}
 		
 		input.value = text;
