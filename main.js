@@ -3,13 +3,15 @@ var LINK_TYPE  = {
     FLOWDOCK  : 'flowdock',
     SOURCE_CONTROL     : 'sourceControl',
     HTML : 'html',
-	TEXT : 'text'
+	TEXT : 'text',
+	PULL_REQUEST : 'pullRequest'
 };
 
 chrome.contextMenus.create({"title": "Create Flowdock Link", "contexts": ["link"], "onclick": genericOnClick, "id": LINK_TYPE.FLOWDOCK});
 chrome.contextMenus.create({"title": "Create Source Control Prefix", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.SOURCE_CONTROL});
 chrome.contextMenus.create({"title": "Create HTML Link", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.HTML});
 chrome.contextMenus.create({"title": "Create Text Reference", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.TEXT});
+chrome.contextMenus.create({"title": "Request Review", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.PULL_REQUEST});
 
 chrome.runtime.onMessage.addListener(function(message) {
 	if (message && message.type == 'copy') {
@@ -44,6 +46,9 @@ function getLink(typeLinkToGet) {
 			text = "[ " + savedObject.linkText + " : " + savedObject.description + " ]";
 		} else if (typeLinkToGet === LINK_TYPE.TEXT){
 			text = savedObject.linkText + ": " + savedObject.description + " (" + savedObject.url + ")";
+		} else if (typeLinkToGet === LINK_TYPE.PULL_REQUEST){
+			var template = "May I please get a review on the following pull request?\n\nPull request in GitHub: PASTE_GITHUB_LINK_HERE\nThis is for " + savedObject.linkText + " - " + savedObject.description+ "\nUser story link: " + savedObject.url + "\n\nThank you for the review!"
+			text = template;
 		}
 		
 		input.value = text;
