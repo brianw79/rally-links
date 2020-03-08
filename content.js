@@ -2,11 +2,9 @@
 document.addEventListener('contextmenu', function (e) {
 
   var srcElement = e.srcElement;
-
-	var pathParts = window.location.href.split('/');
-	var protocol = pathParts[0];
-	var host = pathParts[2];
-
+  var pathParts = window.location.href.split('/');
+  var protocol = pathParts[0];
+  var host = pathParts[2];
 
   if (srcElement.nodeName == 'SPAN') {
 	var objectToSave = { 
@@ -20,15 +18,5 @@ document.addEventListener('contextmenu', function (e) {
 	});
   }
 }, false);
-
-function parentNodeOfType(childNode, parentElementType) {
-    var testObj = childNode.parentElement;
-	
-    while(testObj.nodeName.toUpperCase() != parentElementType.toUpperCase()) {
-        testObj = testObj.parentElement;
-    }
-
-	return testObj;
-}
 
 
