@@ -45,7 +45,10 @@ function getLink(typeLinkToGet) {
 		} else if (typeLinkToGet === LINK_TYPE.SOURCE_CONTROL){
 			text = "[ " + savedObject.linkText + " : " + savedObject.description + " ]";
 		} else if (typeLinkToGet === LINK_TYPE.TEXT){
-			text = savedObject.linkText + ": " + savedObject.description + ", link to story - " + savedObject.url;
+			text = savedObject.linkText + ": " + savedObject.description + ", link to story - " + savedObject.url + ", Github link: " + savedObject.copiedGithubLink;
+		} else if (typeLinkToGet === LINK_TYPE.PULL_REQUEST) {
+			text = "can I get a review for the following PR? Thanks! Github link: " + savedObject.copiedGithubLink + ". This is for " + 
+			savedObject.linkText + ": " + savedObject.description + ", link to story: " + savedObject.url;
 		}
 		
 		input.value = text;
