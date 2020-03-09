@@ -7,7 +7,7 @@ var LINK_TYPE  = {
 	PULL_REQUEST : 'pullRequest'
 };
 
-chrome.contextMenus.create({"title": "Create Flowdock Link", "contexts": ["link"], "onclick": genericOnClick, "id": LINK_TYPE.MD});
+chrome.contextMenus.create({"title": "Create Markdown Link", "contexts": ["link"], "onclick": genericOnClick, "id": LINK_TYPE.MD});
 chrome.contextMenus.create({"title": "Create Source Control Prefix", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.SOURCE_CONTROL});
 chrome.contextMenus.create({"title": "Create HTML Link", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.HTML});
 chrome.contextMenus.create({"title": "Create Text Reference", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.TEXT});
