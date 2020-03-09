@@ -1,13 +1,13 @@
 var STORAGE_INPUT_ID = 'storage';
 var LINK_TYPE  = {
-    FLOWDOCK  : 'flowdock',
+    MD  : 'markDown',
     SOURCE_CONTROL     : 'sourceControl',
     HTML : 'html',
 	TEXT : 'text',
 	PULL_REQUEST : 'pullRequest'
 };
 
-chrome.contextMenus.create({"title": "Create Flowdock Link", "contexts": ["link"], "onclick": genericOnClick, "id": LINK_TYPE.FLOWDOCK});
+chrome.contextMenus.create({"title": "Create Flowdock Link", "contexts": ["link"], "onclick": genericOnClick, "id": LINK_TYPE.MD});
 chrome.contextMenus.create({"title": "Create Source Control Prefix", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.SOURCE_CONTROL});
 chrome.contextMenus.create({"title": "Create HTML Link", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.HTML});
 chrome.contextMenus.create({"title": "Create Text Reference", "contexts":["link"], "onclick": genericOnClick, "id": LINK_TYPE.TEXT});
@@ -38,7 +38,7 @@ function getLink(typeLinkToGet) {
 		var input = document.getElementById(STORAGE_INPUT_ID);
 		var savedObject = JSON.parse(input.value);
 		var text = "";
-		if(typeLinkToGet === LINK_TYPE.FLOWDOCK){
+		if(typeLinkToGet === LINK_TYPE.MD){
 			text = "[" + savedObject.linkText + "](" + savedObject.url + " \"" + savedObject.description.replace(/"/g, '\\"') + "\")";
 		} else if (typeLinkToGet === LINK_TYPE.HTML){
 			text = "<a href='" + savedObject.url + "'>" + savedObject.linkText + "</a>";
