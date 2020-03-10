@@ -11,7 +11,7 @@ document.addEventListener('contextmenu', function (e) {
 	pastClipboardData();
 	var githubLink = getClipBoardData();
 
-	$('#paste-container').remove();
+	console.log('value from getClipBoardData(): ' + githubLink);
 
 	var objectToSave = { 
 		linkText: $(srcElement).text(), 
@@ -28,7 +28,6 @@ document.addEventListener('contextmenu', function (e) {
 }, false);
 
 var pastClipboardData  = () => {
-	// add a DIV, contentEditable=true, to accept the paste action
 	var helperdiv = document.createElement('div');
 	helperdiv.setAttribute("id", "paste-container");
 	document.body.appendChild(helperdiv);
@@ -41,18 +40,36 @@ var pastClipboardData  = () => {
 	window.getSelection().addRange(range);
 	helperdiv.focus();
 
-	// trigger the paste action
-	document.execCommand("Paste");
+	if (document.execCommand("Paste")) {
+		var copiedValue = $('#paste-container').children().html()
+		if (copiedValue && copiedValue.includes('github.com')) {
+			let store = {};
+			store['copiedGithubLink'] = copiedValue;
+			chrome.storage.local.set(store, function () {
+				console.log('copiedGithubLink set to ' + copiedValue);
+			});					
+		}
+	}
+
+	$('#paste-container').remove();
 }
 
 var getClipBoardData = () => {
-	var clipBoardData = $('#paste-container').children().html()
-	var githubLink = 'PASTE_GITHUB_LINK_HERE';
-	if (clipBoardData && clipBoardData.includes('github.com')) {
-		githubLink = clipBoardData
-	}
+	var clipBoardData;
 
-	return githubLink;
+	let store = {};
+	store['copiedGithubLink'] = ''; 
+	chrome.storage.local.get(store, function (result) {
+		clipBoardData = result.copiedGithubLink
+		console.log('Value from get currently is ' + result.copiedGithubLink);
+
+		var githubLink = 'PASTE_GITHUB_LINK_HERE';
+		if (clipBoardData) {
+			githubLink = clipBoardData
+		}
+
+		return githubLink;
+	});
 }
 
 

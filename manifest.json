@@ -2,7 +2,7 @@
   "name": "Rally Links",
   "description": "Create links in Rally",
   "version": "0.6",
-  "permissions": ["contextMenus", "clipboardWrite", "clipboardRead", "activeTab"],
+  "permissions": ["contextMenus", "clipboardWrite", "clipboardRead", "activeTab", "storage"],
   "background": {
     "scripts": ["main.js"]
   },
