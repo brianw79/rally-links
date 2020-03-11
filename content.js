@@ -24,6 +24,7 @@ document.addEventListener('contextmenu', function (e) {
 	  if (document.execCommand("Paste")) {
 		  var copiedValue = $('#paste-container').children().html();
 		  $('#paste-container').remove();
+		  
 		  if (copiedValue && copiedValue.includes('github.com')) {
 			  let store = {};
 			  store['copiedGithubLink'] = copiedValue;
