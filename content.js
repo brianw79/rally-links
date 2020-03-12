@@ -1,128 +1,85 @@
 
 document.addEventListener('contextmenu', function (e) {
 
-  var srcElement = e.srcElement;
-  var pathParts = window.location.href.split('/');
-  var protocol = pathParts[0];
-  var host = pathParts[2];
+	var srcElement = e.srcElement;
 
-  if (srcElement.nodeName == 'SPAN') {
+	if (srcElement.nodeName == 'SPAN') {
 
-	  //pastClipboardData(getClipBoardData);
-	  var helperdiv = document.createElement('div');
-	  helperdiv.setAttribute("id", "paste-container");
-	  document.body.appendChild(helperdiv);
-	  helperdiv.contentEditable = true;
+		attachModalElementToDom();
 
-	  // focus the helper div's content
-	  var range = document.createRange();
-	  range.selectNode(helperdiv);
-	  window.getSelection().removeAllRanges();
-	  window.getSelection().addRange(range);
-	  helperdiv.focus();
+		createContainerAndSetFocus();
 
-	  if (document.execCommand("Paste")) {
-		  var copiedValue = $('#paste-container').children().html();
-		  $('#paste-container').remove();
-		  
-		  if (copiedValue && copiedValue.includes('github.com')) {
-			  let store = {};
-			  store['copiedGithubLink'] = copiedValue;
-			  chrome.storage.local.set(store, function () {
-				  var clipBoardData;
-				  let store = {};
-				  store['copiedGithubLink'] = '';
-				  chrome.storage.local.get(store, function (result) {
-					  clipBoardData = result.copiedGithubLink
-					  console.log('Value from chrome.storage.local.get currently is ' + result.copiedGithubLink);
+		$('#link-modal').show();
 
-					  var githubLink = 'PASTE_GITHUB_LINK_HERE';
-					  if (clipBoardData) {
-						  githubLink = clipBoardData
-					  }
+		if (document.execCommand("Paste")) {
+			var copiedValue = $('#paste-container').children().html();
+			$('#paste-container').remove();
 
-					  var objectToSave = {
-						  linkText: $(srcElement).text(),
-						  url: protocol + '//' + host + '/' + $(srcElement).parent('a').attr('href').replace(/(\r\n|\n|\r)/gm),
-						  description: $(srcElement).parents('td').siblings('th').find('span')[0].innerText.replace(/(\r\n|\n|\r)/gm, ""),
-						  copiedGithubLink: githubLink
-					  };
+			let store = {};
+			store['copiedSourceControlLink'] = isSourceControlLink(copiedValue) ? copiedValue : 'PUT_GITHUB_LINK_HERE';
+			chrome.storage.local.set(store, function () {
+				let store = {};
+				store['copiedSourceControlLink'] = '';
+				chrome.storage.local.get(store, function (result) {
+					var clipBoardData = result.copiedGithubLink
 
-					  chrome.runtime.sendMessage({
-						  type: 'copy',
-						  text: JSON.stringify(objectToSave)
-					  });
-				  });
-			  });
-		  }
-	  } 
-  }
+					var githubLink = 'PASTE_GITHUB_LINK_HERE';
+					if (clipBoardData) {
+						githubLink = clipBoardData
+					}
+
+					var pathParts = window.location.href.split('/');
+					var protocol = pathParts[0];
+					var host = pathParts[2];
+
+					var objectToSave = {
+						linkText: $(srcElement).text(),
+						url: protocol + '//' + host + '/' + $(srcElement).parent('a').attr('href').replace(/(\r\n|\n|\r)/gm),
+						description: $(srcElement).parents('td').siblings('th').find('span')[0].innerText.replace(/(\r\n|\n|\r)/gm, ""),
+						copiedGithubLink: githubLink
+					};
+
+					chrome.runtime.sendMessage({
+						type: 'copy',
+						text: JSON.stringify(objectToSave)
+					});
+				});
+			});
+
+		}
+	}
 }, false);
 
-var pastClipboardData = (pastClipboardDataSuccess) => {
+var createContainerAndSetFocus = () => {
 	var helperdiv = document.createElement('div');
 	helperdiv.setAttribute("id", "paste-container");
 	document.body.appendChild(helperdiv);
 	helperdiv.contentEditable = true;
 
-	// focus the helper div's content
 	var range = document.createRange();
 	range.selectNode(helperdiv);
 	window.getSelection().removeAllRanges();
 	window.getSelection().addRange(range);
 	helperdiv.focus();
 
-	if (document.execCommand("Paste")) {
-		var copiedValue = $('#paste-container').children().html()
-		if (copiedValue && copiedValue.includes('github.com')) {
-			let store = {};
-			store['copiedGithubLink'] = copiedValue;
-			chrome.storage.local.set(store, function () {				
-				console.log('copiedGithubLink set to ' + copiedValue);
-				console.log('calling pastClipboardDataSuccess');
+	return helperdiv;
+}
 
-				pastClipboardDataSuccess(storeResult);
-			});					
-		}
+var isSourceControlLink = (value) => {
+	if (!value) {
+		return false;
 	}
 
-	$('#paste-container').remove();
+	return value.startsWith('https://github.com/');
 }
 
-var getClipBoardData = (getClipBoardDataSuccess) => {
-	console.log('inside getClipBoardData');
-	console.log("getClipBoardDataSuccess is " + getClipBoardDataSuccess)
-	var clipBoardData;
-
-	let store = {};
-	store['copiedGithubLink'] = ''; 
-	chrome.storage.local.get(store, function (result) {
-		clipBoardData = result.copiedGithubLink
-		console.log('Value from chrome.storage.local.get currently is ' + result.copiedGithubLink);
-
-		var githubLink = 'PASTE_GITHUB_LINK_HERE';
-		if (clipBoardData) {
-			githubLink = clipBoardData
-		}
-
-		getClipBoardDataSuccess(githubLink);
-	});
+var attachModalElementToDom = () => {
+	let modalElementExists = $('#link-modal').length;
+	if (!modalElementExists) {
+		var modal = document.createElement('div');
+		modal.setAttribute("id", "link-modal");
+		document.body.appendChild(modal);
+		$('#link-modal').css({ "position": "absolute", "z-index": "1", "left": "50%", "top": "50%", "width": "30%", "background-color": "blue" });
+		$('#link-modal').append('<div class="modal-content"><span class="close">&times;</span><p>Some text in the Modal..</p></div>');		
+	}
 }
-
-var storeResult = (githubLink) => {
-	console.log('value from getClipBoardData(): ' + githubLink);
-
-	var objectToSave = {
-		linkText: $(srcElement).text(),
-		url: protocol + '//' + host + '/' + $(srcElement).parent('a').attr('href').replace(/(\r\n|\n|\r)/gm),
-		description: $(srcElement).parents('td').siblings('th').find('span')[0].innerText.replace(/(\r\n|\n|\r)/gm, ""),
-		copiedGithubLink: githubLink
-	};
-
-	chrome.runtime.sendMessage({
-		type: 'copy',
-		text: JSON.stringify(objectToSave)
-	});
-}
-
-
